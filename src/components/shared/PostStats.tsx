@@ -6,8 +6,8 @@ import {
 } from "@/lib/react-query/queriesAndMutations";
 import { checkIsLiked } from "@/lib/utils";
 import { Models } from "appwrite";
-import { Loader } from "lucide-react";
 import { useState, useEffect } from "react";
+import Loader from "@/components/shared/Loader";
 
 type PostStatsProps = {
   post: Models.Document;
