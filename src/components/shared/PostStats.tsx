@@ -31,7 +31,6 @@ const PostStats = ({ post, userId }: PostStatsProps) => {
 
   useEffect(() => {
     setIsSaved(!!savedPostRecord)
-    console.log("is saved? :", isSaved)
   }, [currentUser])
 
   const handleLikePost = (e: React.MouseEvent) => {
@@ -61,7 +60,6 @@ const PostStats = ({ post, userId }: PostStatsProps) => {
         savePost({ postId: post.$id, userId: userId })
         setIsSaved(true)
     }
-    console.log("post:", savePost,)
   };
 
   return (
