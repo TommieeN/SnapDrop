@@ -6,21 +6,35 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 export function formatDate(dateString: string) {
-  const options: Intl.DateTimeFormatOptions = {
-    year: "numeric",
-    month: "short",
-    day: "numeric",
-  };
-
   const date = new Date(dateString);
-  const formattedDate = date.toLocaleDateString("en-US", options);
+  const now = new Date();
 
-  const time = date.toLocaleTimeString([], {
-    hour: "numeric",
-    minute: "2-digit",
-  });
+  const timeDifference = now.getTime() - date.getTime();
+  const secondsDifference = Math.floor(timeDifference / 1000);
 
-  return `${formattedDate} at ${time}`;
+  if (secondsDifference < 60) {
+    return `${secondsDifference} seconds ago`;
+  }
+
+  const minutesDifference = Math.floor(secondsDifference / 60);
+
+  if (minutesDifference < 60) {
+    return `${minutesDifference} minutes ago`;
+  }
+
+  const hoursDifference = Math.floor(minutesDifference / 60);
+
+  if (hoursDifference < 24) {
+    return `${hoursDifference} ${hoursDifference === 1 ? "hour" : "hours"} ago`;
+  }
+
+  const daysDifference = Math.floor(hoursDifference / 24);
+
+  if (daysDifference === 1) {
+    return "1 day ago";
+  }
+
+  return `${daysDifference} days ago`;
 }
 
 export const checkIsLiked = (likeList: string[], userId: string) => {
