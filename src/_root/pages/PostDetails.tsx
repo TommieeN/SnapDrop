@@ -1,4 +1,5 @@
 import Loader from "@/components/shared/Loader";
+import PostStats from "@/components/shared/PostStats";
 import { Button } from "@/components/ui/button";
 import { useUserContext } from "@/context/AuthContext";
 import { useGetPostById } from "@/lib/react-query/queriesAndMutations";
@@ -44,7 +45,7 @@ const PostDetails = () => {
                   </p>
                   <div className="flex-center gap-2 text-light-3">
                     <p className="subtle-semibold lg:small-regular">
-                      {formatDate(post?.$createdAt)}
+                      {formatDate(post?.$createdAt || "")}
                     </p>
                     -
                     <p className="subtle-semibold lg:small-regular">
@@ -53,7 +54,7 @@ const PostDetails = () => {
                   </div>
                 </div>
               </Link>
-              <div className="flex-center gap-4">
+              <div className="flex-center gap-2">
                 <Link
                   className={`${user.id !== post?.creator.$id && "hidden"}`}
                   to={`/update-post/${post?.$id}`}
@@ -81,6 +82,22 @@ const PostDetails = () => {
                   />
                 </Button>
               </div>
+            </div>
+
+            <hr className="border w-full border-dark-4/80" />
+            <div className="flex flex-col flex-1 w-full small-medium lg:base-regular">
+              <p>{post?.cation}</p>
+              <ul className="flex gap-1 mt-2">
+                {post?.tags.map((tag: string) => (
+                  <li key={tag} className="text-light-3">
+                    #{tag}
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <div className="w-full">
+                  <PostStats post={post} userId={user.id}/>
             </div>
           </div>
         </div>
