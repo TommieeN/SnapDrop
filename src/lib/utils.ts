@@ -13,7 +13,7 @@ export function formatDate(dateString: string) {
   const secondsDifference = Math.floor(timeDifference / 1000);
 
   if (secondsDifference < 60) {
-    return `${secondsDifference} seconds ago`;
+    return `Just now`;
   }
 
   const minutesDifference = Math.floor(secondsDifference / 60);
