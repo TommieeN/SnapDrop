@@ -1,8 +1,10 @@
+import EditProfileForm from "@/components/forms/EditProfileForm";
+
 const UpdateProfile = () => {
   return (
-    <div>
-      <div>
-        <div>
+    <div className="flex flex-1">
+      <div className="common-container">
+        <div className="flex-start gap-3 justify-start w-full max-w-5xl">
           <img
             src="/assets/icons/edit.svg"
             width={36}
@@ -10,8 +12,10 @@ const UpdateProfile = () => {
             alt="edit"
             className="invert-white"
           />
-          <h2>Edit Profile</h2>
+          <h2 className="h3-bold md:h2-bold text-left w-full">Edit Profile</h2>
         </div>
+
+        <EditProfileForm />
       </div>
     </div>
   );
