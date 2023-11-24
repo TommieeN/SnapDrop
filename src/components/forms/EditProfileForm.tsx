@@ -16,14 +16,14 @@ import { useUserContext } from "@/context/AuthContext";
 import { Textarea } from "../ui/textarea";
 import { useToast } from "../ui/use-toast";
 import { useNavigate, useParams } from "react-router-dom";
-import { useGetUserById } from "@/lib/react-query/queriesAndMutations";
+import { useGetUserById, useUpdateUser } from "@/lib/react-query/queriesAndMutations";
 import Loader from "../shared/Loader";
 import ProfileUploader from "../shared/ProfileUploader";
 
 const EditProfileForm = () => {
   const { toast } = useToast();
-  const navigate = useNavigate()
-  const { id } useParams();
+  const navigate = useNavigate();
+  const { id } = useParams();
   const { user, setUser } = useUserContext();
   const form = useForm<z.infer<typeof ProfileValidation>>({
     resolver: zodResolver(ProfileValidation),
@@ -37,7 +37,7 @@ const EditProfileForm = () => {
   });
 
   const { data: currentUser } = useGetUserById(id || "");
-  const { mutateAsync: updateUser, isLoading: isLoadingUpdate } = useUpdateUser()
+  const { mutateAsync: updateUser, isPending: isLoadingUpdate } = useUpdateUser() 
 
   if (!currentUser)
   return (
@@ -46,7 +46,7 @@ const EditProfileForm = () => {
     </div>
     )
 
-  // 2. Define a submit handler.
+
   const handleUpdate = async (value: z.infer<typeof ProfileValidation>) => {
     const updatedUser = await updateUser({
         userId: currentUser.$id,
@@ -56,17 +56,15 @@ const EditProfileForm = () => {
         imageUrl: currentUser.imageUrl,
         imageId: currentUser.imageId,
     });
-
     if (!updatedUser) {
         toast({
             title: "Update user failed. Please try again.",
         });
     }
-
     setUser({
         ...user,
         name: updatedUser?.name,
-        bio: updateUser?.bio,
+        bio: updatedUser?.bio,
         imageUrl: updatedUser?.imageUrl,
     });
     return navigate(`/profile/${id}`);
@@ -150,7 +148,9 @@ const EditProfileForm = () => {
           <Button
             className="shad-button_primary whitespace-nowrap"
             type="submit"
+            disabled={isLoadingUpdate}
           >
+            {isLoadingUpdate && <Loader />}
             Update Profile
           </Button>
         </div>
