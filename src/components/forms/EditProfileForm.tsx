@@ -6,7 +6,6 @@ import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -15,8 +14,16 @@ import {
 import { Input } from "@/components/ui/input";
 import { useUserContext } from "@/context/AuthContext";
 import { Textarea } from "../ui/textarea";
+import { useToast } from "../ui/use-toast";
+import { useNavigate, useParams } from "react-router-dom";
+import { useGetUserById } from "@/lib/react-query/queriesAndMutations";
+import Loader from "../shared/Loader";
+import ProfileUploader from "../shared/ProfileUploader";
 
 const EditProfileForm = () => {
+  const { toast } = useToast();
+  const navigate = useNavigate()
+  const { id } useParams();
   const { user, setUser } = useUserContext();
   const form = useForm<z.infer<typeof ProfileValidation>>({
     resolver: zodResolver(ProfileValidation),
@@ -29,25 +36,54 @@ const EditProfileForm = () => {
     },
   });
 
+  const { data: currentUser } = useGetUserById(id || "");
+  const { mutateAsync: updateUser, isLoading: isLoadingUpdate } = useUpdateUser()
+
+  if (!currentUser)
+  return (
+    <div className="flex-center w-full h-full">
+        <Loader />
+    </div>
+    )
+
   // 2. Define a submit handler.
-  function onSubmit(values: z.infer<typeof ProfileValidation>) {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
-    console.log(values);
+  const handleUpdate = async (value: z.infer<typeof ProfileValidation>) => {
+    const updatedUser = await updateUser({
+        userId: currentUser.$id,
+        name: value.name,
+        bio: value.bio,
+        file: value.file,
+        imageUrl: currentUser.imageUrl,
+        imageId: currentUser.imageId,
+    });
+
+    if (!updatedUser) {
+        toast({
+            title: "Update user failed. Please try again.",
+        });
+    }
+
+    setUser({
+        ...user,
+        name: updatedUser?.name,
+        bio: updateUser?.bio,
+        imageUrl: updatedUser?.imageUrl,
+    });
+    return navigate(`/profile/${id}`);
   }
 
   return (
     <Form {...form}>
       <form
         className="flex flex-col gap-7 w-full mt-4 max-w-5xl"
-        onSubmit={form.handleSubmit(onSubmit)}
+        onSubmit={form.handleSubmit(handleUpdate)}
       >
         <FormField
           control={form.control}
           name="file"
           render={({ field }) => (
             <FormItem className="flex">
-              <FormControl>{/* <ProfileUploader /> */}</FormControl>
+              <FormControl><ProfileUploader fieldChange={field.onChange} mediaUrl={currentUser.imageUrl} /></FormControl>
               <FormMessage className="shad-form_message" />
             </FormItem>
           )}
