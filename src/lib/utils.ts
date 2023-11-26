@@ -16,19 +16,26 @@ export function formatDate(dateString: string) {
   if (secondsDifference < 60) {
     return `Just now`;
   }
+
   const minutesDifference = Math.floor(secondsDifference / 60);
   if (minutesDifference < 60) {
-    return `${minutesDifference} minutes ago`;
+    return `${minutesDifference} ${minutesDifference === 1 ? "minute" : "minutes"} ago`;
   }
+
   const hoursDifference = Math.floor(minutesDifference / 60);
   if (hoursDifference < 24) {
     return `${hoursDifference} ${hoursDifference === 1 ? "hour" : "hours"} ago`;
   }
-  const daysDifference = Math.floor(hoursDifference / 24);
-  if (daysDifference === 1) {
-    return "1 day ago";
-  }
-  return `${daysDifference} days ago`;
+
+  const options: Intl.DateTimeFormatOptions = { 
+    day: 'numeric', 
+    month: 'long', 
+    year: 'numeric', 
+    hour: 'numeric', 
+    minute: 'numeric' 
+  };
+
+  return date.toLocaleDateString(undefined, options);
 }
 
 export const checkIsLiked = (likeList: string[], userId: string) => {

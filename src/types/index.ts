@@ -46,3 +46,11 @@ export type INewUser = {
   username: string;
   password: string;
 };
+
+export type IOptions = {
+  year: string;
+  month: string;
+  day: string;
+  hour: string;
+  minute: string;
+};
