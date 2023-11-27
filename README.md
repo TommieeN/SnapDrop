@@ -1,6 +1,6 @@
-# SnapDrop Instagram Clone Project
+# SnapDrop Instagram Clone Project <a href="https://snap-drop-alpha.vercel.app/">Deployment<a>
 
-<a href="https://snap-drop-alpha.vercel.app/">Deployment<a>
+<img src="https://github.com/TommieeN/TommieeN/assets/123577810/1834c697-44d3-49d2-bba4-1fca5ff199de" alt="Screen Recording" width="100%">
 
 Welcome to my Instagram Clone project! This web application replicates key features of the popular social media platform Instagram. Users can post images, add captions, and interact with posts.
 
