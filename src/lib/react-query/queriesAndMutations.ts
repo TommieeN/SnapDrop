@@ -14,6 +14,7 @@ import {
   getPostById,
   getRecentPosts,
   getUserById,
+  getUserPosts,
   getUsers,
   likePost,
   savePost,
@@ -164,7 +165,7 @@ export const useDeletePost = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ postId, imageId }: { postId: string; imageId: string }) =>
+    mutationFn: ({ postId, imageId }: { postId: any; imageId: string }) =>
       deletePost(postId, imageId),
     onSuccess: () => {
       queryClient.invalidateQueries({
@@ -188,6 +189,14 @@ export const useGetPosts = () => {
     initialPageParam: null,
   });
 };
+
+export const useGetUserPosts = (userId?: string) => {
+  return useQuery({
+    queryKey: [QUERY_KEYS.GET_USER_POSTS, userId],
+    queryFn: () => getUserPosts(userId),
+    enabled: !!userId,
+  })
+}
 
 export const useSearchPosts = (searchTerm: string) => {
   return useQuery({
