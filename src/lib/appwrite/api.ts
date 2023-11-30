@@ -483,3 +483,28 @@ export async function updateUser(user: IUpdateUser) {
     console.log(error);
   }
 }
+
+export async function createComment(comment: {
+  postId: string;
+  userId: string;
+  text: string;
+}) {
+  try {
+    const newComment = await databases.createDocument(
+      appwriteConfig.databaseId,
+      appwriteConfig.commentCollectionId,
+      ID.unique(),
+      {
+        postId: comment.postId,
+        userId: comment.userId,
+        text: comment.text,
+        createdAt: Date.now(),
+      }
+    )
+    if (!newComment) throw Error;
+
+    return newComment
+  } catch (error) {
+    console.log(error)
+  }
+}

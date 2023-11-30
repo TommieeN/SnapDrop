@@ -54,3 +54,9 @@ export type IOptions = {
   hour: string;
   minute: string;
 };
+
+export interface INewComment {
+  postId: string;
+  userId: string;
+  text: string;
+}

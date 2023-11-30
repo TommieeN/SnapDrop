@@ -1,11 +1,13 @@
 import GridPostList from "@/components/shared/GridPostList";
 import Loader from "@/components/shared/Loader";
 import PostStats from "@/components/shared/PostStats";
+import commentIcon from "../../../public/assets/icons/comment.svg"
 import { Button } from "@/components/ui/button";
 import { useUserContext } from "@/context/AuthContext";
 import { useDeletePost, useGetPostById, useGetUserPosts } from "@/lib/react-query/queriesAndMutations";
 import { formatDate } from "@/lib/utils";
 import { Link, useNavigate, useParams } from "react-router-dom";
+import { Input } from "@/components/ui/input";
 
 const PostDetails = () => {
   const { id } = useParams();
@@ -104,9 +106,21 @@ const PostDetails = () => {
                 ))}
               </ul>
             </div>
+            
+            <div>
+              comment section
+            </div>
+
             <div className="w-full">
               <PostStats post={post} userId={user.id} />
             </div>
+
+            <div className="flex w-full items-center">
+              <img className="h-[40px] w-[40px] mr-[11px] rounded-full" src={user.imageUrl || "/assets/icons/profile-placeholder.svg"} />
+              <Input className=" bg-dark-3 border-none" placeholder="Write your comment..." />
+              <img className="ml-[11px]" src={commentIcon} alt="comment-button"/>
+            </div>
+
           </div>
         </div>
       )}
