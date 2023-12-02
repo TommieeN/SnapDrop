@@ -25,7 +25,8 @@ const PostDetails = () => {
   const { data: userPosts, isPending: isUserPostLoading } = useGetUserPosts(
     post?.creator.$id
   );
-  const { data: comments, isPending: isCommentsLoading } = useGetCommentsByPostId(id || "")
+  const { data: comments, isPending: isCommentsLoading } =
+    useGetCommentsByPostId(id || "");
 
   const { mutate: deletePost } = useDeletePost();
   const { mutate: createComment } = useCreateComment();
@@ -36,7 +37,7 @@ const PostDetails = () => {
 
   const [commentText, setCommentText] = useState("");
 
-  console.log("comments data", comments)
+  console.log("comments data", comments);
   const handleCommentSubmit = async (commentText: any) => {
     try {
       await createComment({
@@ -134,14 +135,22 @@ const PostDetails = () => {
                 ))}
               </ul>
             </div>
-            <div>
-              {/* {comments?.documents[0].text} */}
-              {comments?.documents.map((comment: any) => {
-                return (
+            {comments?.documents.map((comment: any) => {
+              console.log("user", user);
+              return (
+                <div className="flex items-center">
+                  <div>
+                    <img
+                      className="h-[40px] w-[40px] mr-[11px] rounded-full"
+                      src={user.imageUrl}
+                    />
+                    <p>{formatDate(comment.$createdAt)}</p>
+                  </div>
+                  <p className="text-light-3">{user.name}</p>
                   <p>{comment.text}</p>
-                )
-              })}
-            </div>
+                </div>
+              );
+            })}
             <div className="w-full">
               <PostStats post={post} userId={user.id} />
             </div>
