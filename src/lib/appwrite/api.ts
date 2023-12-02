@@ -485,8 +485,8 @@ export async function updateUser(user: IUpdateUser) {
 }
 
 export async function createComment(comment: {
-  postId: string;
   userId: string;
+  postId: string;
   text: string;
 }) {
   try {
@@ -495,10 +495,9 @@ export async function createComment(comment: {
       appwriteConfig.commentCollectionId,
       ID.unique(),
       {
+        creator: comment.userId,
         postId: comment.postId,
-        userId: comment.userId,
         text: comment.text,
-        createdAt: Date.now(),
       }
     )
     if (!newComment) throw Error;
@@ -508,3 +507,32 @@ export async function createComment(comment: {
     console.log(error)
   }
 }
+
+export async function getCommentsByPostId(postId: string) {
+  try {
+    const comments = await databases.listDocuments(
+      appwriteConfig.databaseId,
+      appwriteConfig.commentCollectionId,
+      [Query.equal("postId", postId), Query.orderDesc("$createdAt")]
+    );
+
+    if (!comments) throw Error;
+
+    return comments
+  } catch (error) {
+    console.log(error);
+  }
+}
+// const newPost = await databases.createDocument(
+//   appwriteConfig.databaseId,
+//   appwriteConfig.postCollectionId,
+//   ID.unique(),
+//   {
+//     creator: post.userId,
+//     caption: post.caption,
+//     imageUrl: fileUrl,
+//     imageId: uploadedFile.$id,
+//     location: post.location,
+//     tags: tags,
+//   }
+// );

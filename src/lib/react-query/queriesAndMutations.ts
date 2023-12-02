@@ -10,6 +10,7 @@ import {
   createUserAccount,
   deletePost,
   deleteSavedPost,
+  getCommentsByPostId,
   getCurrentUser,
   getInfinitePosts,
   getPostById,
@@ -179,7 +180,7 @@ export const useDeletePost = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ postId, imageId }: { postId: string; imageId: string }) =>
+    mutationFn: ({ postId, imageId } : { postId: any; imageId: string }) =>
       deletePost(postId, imageId),
     onSuccess: () => {
       queryClient.invalidateQueries({
@@ -251,5 +252,12 @@ export const useUpdateUser = () => {
   });
 };
 
+export const useGetCommentsByPostId = (postId: string) => {
+  return useQuery({
+    queryKey: [QUERY_KEYS.GET_POST_COMMENTS, postId],
+    queryFn: () => getCommentsByPostId(postId),
+    enabled: !!postId,
+  })
+}
 
 

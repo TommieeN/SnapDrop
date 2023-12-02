@@ -1,30 +1,58 @@
 import GridPostList from "@/components/shared/GridPostList";
 import Loader from "@/components/shared/Loader";
 import PostStats from "@/components/shared/PostStats";
-import commentIcon from "../../../public/assets/icons/comment.svg"
+import commentIcon from "../../../public/assets/icons/comment.svg";
 import { Button } from "@/components/ui/button";
 import { useUserContext } from "@/context/AuthContext";
-import { useDeletePost, useGetPostById, useGetUserPosts } from "@/lib/react-query/queriesAndMutations";
+import {
+  useCreateComment,
+  useDeletePost,
+  useGetCommentsByPostId,
+  useGetPostById,
+  useGetUserPosts,
+} from "@/lib/react-query/queriesAndMutations";
 import { formatDate } from "@/lib/utils";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { Input } from "@/components/ui/input";
+import { useState } from "react";
 
 const PostDetails = () => {
   const { id } = useParams();
   const { user } = useUserContext();
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const { data: post, isPending } = useGetPostById(id || "");
-  const { data: userPosts, isPending: isUserPostLoading } = useGetUserPosts(post?.creator.$id)
+  const { data: userPosts, isPending: isUserPostLoading } = useGetUserPosts(
+    post?.creator.$id
+  );
+  const { data: comments, isPending: isCommentsLoading } = useGetCommentsByPostId(id || "")
+
   const { mutate: deletePost } = useDeletePost();
+  const { mutate: createComment } = useCreateComment();
 
   const relatedPosts = userPosts?.documents.filter(
     (userPost) => userPost.$id !== id
-  )
+  );
+
+  const [commentText, setCommentText] = useState("");
+
+  console.log("comments data", comments)
+  const handleCommentSubmit = async (commentText: any) => {
+    try {
+      await createComment({
+        postId: post?.$id,
+        text: commentText,
+        creator: user.id,
+      });
+      setCommentText("");
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const handleDeletePost = () => {
     deletePost({ postId: id, imageId: post?.imageId });
-    navigate(-1)
+    navigate(-1);
   };
 
   return (
@@ -106,28 +134,40 @@ const PostDetails = () => {
                 ))}
               </ul>
             </div>
-            
             <div>
-              comment section
+              {/* {comments?.documents[0].text} */}
+              {comments?.documents.map((comment: any) => {
+                return (
+                  <p>{comment.text}</p>
+                )
+              })}
             </div>
-
             <div className="w-full">
               <PostStats post={post} userId={user.id} />
             </div>
-
             <div className="flex w-full items-center">
-              <img className="h-[40px] w-[40px] mr-[11px] rounded-full" src={user.imageUrl || "/assets/icons/profile-placeholder.svg"} />
-              <Input className=" bg-dark-3 border-none" placeholder="Write your comment..." />
-              <img className="ml-[11px]" src={commentIcon} alt="comment-button"/>
+              <img
+                className="h-[40px] w-[40px] mr-[11px] rounded-full"
+                src={user.imageUrl || "/assets/icons/profile-placeholder.svg"}
+              />
+              <Input
+                className=" bg-dark-3 border-none"
+                onChange={(e) => setCommentText(e.target.value)}
+                placeholder="Write your comment..."
+              />
+              <button onClick={() => handleCommentSubmit(commentText)}>
+                <img
+                  className="ml-[11px]"
+                  src={commentIcon}
+                  alt="comment-button"
+                />
+              </button>
             </div>
-
           </div>
         </div>
       )}
-
       <div className="w-full max-w-5xl">
         <hr className="border w-full border-dark-4/80" />
-
         <h3 className="body-bold md:h3-bold w-full my-10">
           More Related Posts
         </h3>
