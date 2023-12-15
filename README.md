@@ -1,4 +1,4 @@
-# SnapDrop Instagram Clone Project <a href="https://snap-drop-alpha.vercel.app/">Deployment<a>
+# SnapDrop Instagram Clone Project <ahref="https://snap-drop-alpha.vercel.app/sign-in" target="_blank" >Deployment</a>
 
 <img src="https://github.com/TommieeN/TommieeN/assets/123577810/1834c697-44d3-49d2-bba4-1fca5ff199de" alt="Screen Recording" width="100%">
 
